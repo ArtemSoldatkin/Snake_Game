@@ -1,0 +1,87 @@
+<!-- websockets.html -->
+<div class="main">
+	<canvas id="game_field"></canvas>
+	<div class="actions">
+		<h3>Settings</h3>
+		<label for="width_size">Insert width</label>
+		<input class="field_size" id="width_size" type="number" value="200" min="100" max="1000" />
+
+		<label for="height_size">Insert height</label>
+		<input class="field_size" id="height_size" type="number" value="200" min="100" max="1000" />
+	</div>
+</div>
+
+<script>
+	// Socket
+	var socket = new WebSocket("ws://localhost:5000/echo");
+
+	// Send message to server with action type and data
+	function sendMsg(type, data) {
+		var msg = { type, data };
+		socket.send(JSON.stringify(msg));
+	}
+
+	socket.onopen = function () {
+		sendMsg("CONNECT", null);
+	};
+
+	socket.onmessage = function (e) {
+		var data = JSON.parse(e.data);
+		var action = actions[data.type];
+		action && action(data.data);
+	};
+
+	// Field params
+	var field = document.getElementById("game_field");
+	var widthSize = document.getElementById("width_size");
+	var heightSize = document.getElementById("height_size");
+	// Set onblur event to field_size inputs
+	var sizeParam = document.getElementsByClassName("field_size");
+	for (var i = 0; i < sizeParam.length; ++i)
+		sizeParam[i].addEventListener("blur", function () {
+			sendMsg("SET_FIELD_SIZE", [widthSize.value, heightSize.value]);
+		});
+
+	var actions = {
+		SET_FIELD_SIZE: setFieldSize,
+	};
+
+	function setFieldSize(size) {
+		field.style.width = size[0] + "px";
+		field.style.height = size[1] + "px";
+	}
+
+	document.onkeyup = function (e) {
+		var direction;
+		switch (e.key) {
+			case "ArrowUp":
+				direction = "UP";
+				break;
+			case "ArrowDown":
+				direction = "DOWN";
+				break;
+			case "ArrowRight":
+				direction = "RIGHT";
+				break;
+			case "ArrowLeft":
+				direction = "LEFT";
+				break;
+		}
+		direction && send(direction);
+	};
+</script>
+
+<style>
+	.main {
+		display: flex;
+		padding: 50px;
+	}
+	.main #game_field {
+		width: 200px;
+		height: 200px;
+		background-color: black;
+	}
+	.main .actions {
+		margin-left: 20px;
+	}
+</style>
