@@ -3,9 +3,13 @@ package main
 
 import (
 	"net/http"
+	"snake/field"
 
 	"github.com/gorilla/websocket"
 )
+
+// GameField - struct with game field params
+var GameField = field.Field{300, 300}
 
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
@@ -20,20 +24,18 @@ func main() {
 			if err != nil {
 				return
 			}
-			data := readMessage(msg)
-			if data.Type == "CONNECT" {
-				msg, _ = createMessage("SET_FIELD_SIZE", data.Data)
-			}
-
+			msg = reducer(msg)
 			if err = conn.WriteMessage(msgType, msg); err != nil {
 				return
 			}
 		}
 	})
 
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		http.ServeFile(w, r, "client.html")
-	})
+	http.Handle("/", http.StripPrefix("/", http.FileServer(http.Dir("./static"))))
+	//http.Handle("/static", http.StripPrefix("/static", http.FileServer(http.Dir("./static"))))
+	/*http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "static/index.html")
+	})*/
 
 	http.ListenAndServe(":5000", nil)
 }
