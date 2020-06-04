@@ -16,6 +16,10 @@ func reducer(msg []byte) (result []byte) {
 		settings := getGameSettings(message.Data)
 		GameField.SetSize(settings["width"], settings["height"])
 		result, _ = createMessage("SET_GAME_SETTINGS", nil)
+	case "START_PAUSE":
+		isStarted := message.Data.(bool)
+		Game.StartStop(isStarted)
+		result, _ = createMessage("START_PAUSE", isStarted)
 
 	// Game controls
 	case "UP":

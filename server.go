@@ -4,12 +4,19 @@ package main
 import (
 	"net/http"
 	"snake/field"
+	"snake/game"
 
 	"github.com/gorilla/websocket"
 )
 
+// GameConfig - default game config
+var GameConfig = readConfig()
+
 // GameField - struct with game field params
-var GameField = field.Field{300, 300}
+var GameField = field.Field{GameConfig.Width, GameConfig.Height}
+
+// Game - type of game with settings
+var Game = game.Game{Field: &GameField, Speed: GameConfig.Speed}
 
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
@@ -17,6 +24,9 @@ var upgrader = websocket.Upgrader{
 }
 
 func main() {
+
+	Game.Init()
+
 	http.HandleFunc("/echo", func(w http.ResponseWriter, r *http.Request) {
 		conn, _ := upgrader.Upgrade(w, r, nil) // error ignored for sake of simplicity
 		for {

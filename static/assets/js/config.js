@@ -5,6 +5,15 @@ const field = document.getElementById("game_field");
 const widthSize = document.getElementById("width_size");
 const heightSize = document.getElementById("height_size");
 const configButton = document.getElementById("send_config");
+const startPauseButton = document.getElementById("start_pause_game");
+
+let isStarted = false;
+
+startPauseButton.addEventListener("click", () => {
+	isStarted = !isStarted;
+	startPauseButton.innerText = isStarted ? "Pause" : "Start";
+	SendMsg("START_PAUSE", isStarted);
+});
 
 configButton.addEventListener("click", () => {
 	const width = widthSize.value;
@@ -13,6 +22,8 @@ configButton.addEventListener("click", () => {
 		alert("Wrong parameters");
 		return;
 	}
+	field.style.width = width;
+	field.style.height = height;
 	SendMsg("SET_GAME_SETTINGS", { width, height });
 });
 
