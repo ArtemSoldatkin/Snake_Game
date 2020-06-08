@@ -8,8 +8,9 @@ func reducer(msg []byte) (result []byte) {
 	message := readMessage(msg)
 	switch message.Type {
 	case "CONNECT":
-		size := [2]int{GameField.Width, GameField.Height}
-		result, _ = createMessage("SET_FIELD_SIZE", size)
+		GameField.Init()
+		head := *GameField.Head
+		result, _ = createMessage("INITIALIZE", head)
 
 	// Game config
 	case "SET_GAME_SETTINGS":

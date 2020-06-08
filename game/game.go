@@ -11,6 +11,7 @@ type Game struct {
 	Field     *field.Field
 	Speed     int
 	IsStarted bool
+	Message   func()
 	ticker    *time.Ticker
 	done      chan bool
 }
@@ -31,7 +32,7 @@ func (g *Game) start() {
 			case <-g.done:
 				return
 			case <-g.ticker.C:
-				fmt.Println("MOVE")
+				g.Message()
 			}
 		}
 	}()

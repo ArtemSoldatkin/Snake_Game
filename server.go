@@ -13,7 +13,7 @@ import (
 var GameConfig = readConfig()
 
 // GameField - struct with game field params
-var GameField = field.Field{GameConfig.Width, GameConfig.Height}
+var GameField = field.Field{FieldWidth: GameConfig.Width, FieldHeight: GameConfig.Height}
 
 // Game - type of game with settings
 var Game = game.Game{Field: &GameField, Speed: GameConfig.Speed}
@@ -28,7 +28,14 @@ func main() {
 	Game.Init()
 
 	http.HandleFunc("/echo", func(w http.ResponseWriter, r *http.Request) {
-		conn, _ := upgrader.Upgrade(w, r, nil) // error ignored for sake of simplicity
+		conn, _ := upgrader.Upgrade(w, r, nil)
+		moveAction := func() {
+			msg, _ := createMessage("MOVE", nil)
+			if err := conn.WriteMessage(1, msg); err != nil {
+				return
+			}
+		}
+		Game.Message = moveAction
 		for {
 			msgType, msg, err := conn.ReadMessage()
 			if err != nil {
@@ -42,10 +49,5 @@ func main() {
 	})
 
 	http.Handle("/", http.StripPrefix("/", http.FileServer(http.Dir("./static"))))
-	//http.Handle("/static", http.StripPrefix("/static", http.FileServer(http.Dir("./static"))))
-	/*http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		http.ServeFile(w, r, "static/index.html")
-	})*/
-
 	http.ListenAndServe(":5000", nil)
 }

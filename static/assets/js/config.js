@@ -12,6 +12,9 @@ let isStarted = false;
 startPauseButton.addEventListener("click", () => {
 	isStarted = !isStarted;
 	startPauseButton.innerText = isStarted ? "Pause" : "Start";
+	widthSize.disabled = isStarted;
+	heightSize.disabled = isStarted;
+	configButton.disabled = isStarted;
 	SendMsg("START_PAUSE", isStarted);
 });
 
@@ -30,7 +33,6 @@ configButton.addEventListener("click", () => {
 // Load JSON config
 (async () => {
 	const CONFIG = await fetch("../../config.json").then((data) => data.json());
-	//const CONFIG = await data.json();
 	field.style.width = CONFIG["width"];
 	field.style.height = CONFIG["height"];
 })();
