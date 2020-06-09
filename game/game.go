@@ -11,9 +11,12 @@ type Game struct {
 	Field     *field.Field
 	Speed     int
 	IsStarted bool
-	Message   func()
+	Message   func(data interface{})
 	ticker    *time.Ticker
 	done      chan bool
+	Direction string
+	BlockSize int
+	Snake     []field.Block
 }
 
 // Init - initialize game
@@ -21,6 +24,12 @@ func (g *Game) Init() {
 	g.IsStarted = false
 	g.ticker = time.NewTicker(500 * time.Millisecond)
 	g.done = make(chan bool)
+	g.BlockSize = 20
+	head := field.Block{Width: g.BlockSize, Height: g.BlockSize}
+	//head.InitRand(g.Field.FieldWidth, g.Field.FieldHeight)
+	head.InitRand(350, 350)
+	g.Snake = append(g.Snake, head)
+	g.Direction = "RIGHT"
 }
 
 func (g *Game) start() {
@@ -32,7 +41,10 @@ func (g *Game) start() {
 			case <-g.done:
 				return
 			case <-g.ticker.C:
-				g.Message()
+				newBlock := Step(g.Direction, g.Snake[0])
+				g.Snake = g.Snake[:len(g.Snake)-1]
+				g.Snake = append(g.Snake, newBlock)
+				g.Message(g.Snake)
 			}
 		}
 	}()

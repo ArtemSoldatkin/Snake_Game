@@ -9,8 +9,7 @@ func reducer(msg []byte) (result []byte) {
 	switch message.Type {
 	case "CONNECT":
 		GameField.Init()
-		head := *GameField.Head
-		result, _ = createMessage("INITIALIZE", head)
+		result, _ = createMessage("INITIALIZE", Game.Snake)
 
 	// Game config
 	case "SET_GAME_SETTINGS":
@@ -25,17 +24,21 @@ func reducer(msg []byte) (result []byte) {
 	// Game controls
 	case "UP":
 		fmt.Println("UP")
+		Game.Direction = message.Type
 		result, _ = createMessage("UP", "UP")
 
 	case "DOWN":
 		fmt.Print("DOWN")
+		Game.Direction = message.Type
 		result, _ = createMessage("DOWN", "DOWN")
 	case "RIGHT":
 		fmt.Print("RIGHT")
+		Game.Direction = message.Type
 		result, _ = createMessage("RIGHT", "RIGHT")
 
 	case "LEFT":
 		fmt.Print("LEFT")
+		Game.Direction = message.Type
 		result, _ = createMessage("LEFT", "LEFT")
 
 	}

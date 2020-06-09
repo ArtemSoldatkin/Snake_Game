@@ -1,10 +1,13 @@
-import { AddBlock } from "./game/index.js";
+import { DrawSnake } from "./game/index.js";
 
 export const Reducer = (action, data) => {
 	console.log(action, data);
 	switch (action) {
 		case "INITIALIZE":
-			AddBlock(data);
+			DrawSnake(data);
+			break;
+		case "MOVE":
+			DrawSnake(data);
 			break;
 	}
 };
