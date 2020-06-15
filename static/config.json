@@ -1,5 +1,8 @@
 {
+	"block_side": 20,
+	"field_size": 20,
+	"speed": 60,
+	"_comment": "depricated",
 	"width": 350,
-	"height": 350,
-	"speed": 60
+	"height": 350
 }

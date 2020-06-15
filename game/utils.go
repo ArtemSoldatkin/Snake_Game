@@ -22,3 +22,7 @@ func Step(direction string, head field.Block) field.Block {
 	}
 	return field.Block{x, y, w, h}
 }
+
+func checkBorders(field *field.Field, head field.Block) bool {
+	return !(head.X > field.FieldWidth || head.X < 0 || head.Y > field.FieldHeight || head.Y < 0)
+}

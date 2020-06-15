@@ -29,8 +29,12 @@ func main() {
 
 	http.HandleFunc("/echo", func(w http.ResponseWriter, r *http.Request) {
 		conn, _ := upgrader.Upgrade(w, r, nil)
-		moveAction := func(snake interface{}) {
-			msg, _ := createMessage("MOVE", snake)
+		moveAction := func(snake interface{}, args ...string) {
+			msgType := "MOVE"
+			if len(args) > 0 {
+				msgType = args[0]
+			}
+			msg, _ := createMessage(msgType, snake)
 			if err := conn.WriteMessage(1, msg); err != nil {
 				return
 			}
