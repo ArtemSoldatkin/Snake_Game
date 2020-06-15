@@ -1,0 +1,20 @@
+.main {
+	display: flex;
+	padding: 50px;
+}
+.main #game_field {
+	background-color: black;
+}
+.main .settings {
+	width: 200px;
+	margin-left: 20px;
+}
+
+.main .settings .settings_inputs {
+	display: flex;
+	justify-content: space-between;
+}
+
+input {
+	width: 50px;
+}
