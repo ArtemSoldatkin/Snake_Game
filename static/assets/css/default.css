@@ -1,0 +1,17 @@
+h3 {
+	margin: 0;
+}
+
+input {
+	width: 50px;
+	border: none;
+	border-radius: var(--small-radius);
+}
+
+button {
+	width: 100%;
+	cursor: pointer;
+	border-radius: var(--small-radius);
+	cursor: pointer;
+	border: none;
+}

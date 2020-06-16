@@ -1,20 +1,69 @@
+@import "./variables.css";
+@import "./default.css";
+
 .main {
 	display: flex;
-	padding: 50px;
-}
-.main #game_field {
-	background-color: black;
-}
-.main .settings {
-	width: 200px;
-	margin-left: 20px;
+	padding: var(--big-padding);
+	border: 1px solid var(--primary-color);
+	border-radius: var(--big-radius);
+	background-color: var(--secondary-color);
 }
 
-.main .settings .settings_inputs {
+#game_field {
+	background-color: var(--field-color);
+	border: 1px solid var(--primary-color);
+	border-radius: var(--small-radius) 0 0 var(--small-radius);
+}
+
+.game_info {
+	display: flex;
+	flex-direction: column;
+	padding: var(--small-padding);
+	justify-content: space-between;
+	width: 200px;
+	border-radius: 0 var(--small-radius) var(--small-radius) 0;
+	border: 1px solid var(--primary-color);
+}
+
+.results {
+	text-align: center;
+	font-weight: bold;
+	font-size: 24px;
+}
+
+#results_value {
+	font-weight: bold;
+	font-size: 48px;
+	line-height: 48px;
+}
+
+#start_pause_game {
+	background-color: var(--accent-color);
+	color: white;
+	height: 50px;
+	font-size: 36px;
+	line-height: 36px;
+	font-weight: bold;
+}
+
+#start_pause_game:hover {
+	color: var(--primary-color);
+}
+
+.settings {
+	text-align: center;
+}
+
+.settings_inputs {
 	display: flex;
 	justify-content: space-between;
+	margin-bottom: 4px;
 }
 
-input {
-	width: 50px;
+#send_config {
+	height: 24px;
+	font-size: 18px;
+	line-height: 18px;
+	color: white;
+	background-color: var(--primary-color);
 }

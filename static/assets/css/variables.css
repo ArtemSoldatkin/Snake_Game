@@ -1,0 +1,15 @@
+:root {
+	/* Colors */
+	--primary-color: #8bc34a;
+	--accent-color: #4d259f;
+	--secondary-color: #f1f8e9;
+	--field-color: black;
+
+	/* Radius */
+	--big-radius: 8px;
+	--small-radius: 4px;
+
+	/* Paddings */
+	--big-padding: 50px;
+	--small-padding: 10px;
+}

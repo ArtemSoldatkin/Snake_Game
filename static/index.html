@@ -7,22 +7,30 @@
 <body>
 	<div class="main">
 		<canvas id="game_field"></canvas>
-		<div class="settings">
-			<h3>Settings</h3>
-			<div class="settings_inputs">
-				<label for="block_size">Insert block size</label>
-				<input id="block_size" type="number" min="1" max="100" />
+		<div class="game_info">
+			<div class="results">
+				<h3>Your result</h3>
+				<span id="results_value">0</span>
 			</div>
-			<div class="settings_inputs">
-				<label for="field_size">Insert field size</label>
-				<input id="field_size" type="number" min="1" max="100" />
+			<div class="start_game">
+				<button id="start_pause_game">Start</button>
 			</div>
-			<div class="settings_inputs">
-				<label for="game_speed">Insert game speed</label>
-				<input id="game_speed" type="number" min="1" max="10" />
+			<div class="settings">
+				<h3>Settings</h3>
+				<div class="settings_inputs">
+					<label for="block_size">Block size</label>
+					<input id="block_size" type="number" min="1" max="100" />
+				</div>
+				<div class="settings_inputs">
+					<label for="field_size">Field size</label>
+					<input id="field_size" type="number" min="1" max="100" />
+				</div>
+				<div class="settings_inputs">
+					<label for="game_speed">Game speed</label>
+					<input id="game_speed" type="number" min="1" max="10" />
+				</div>
+				<button id="send_config">Accept</button>
 			</div>
-			<button id="send_config">Accept</button>
-			<button id="start_pause_game">Start</button>
 		</div>
 	</div>
 </body>
