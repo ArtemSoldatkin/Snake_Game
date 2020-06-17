@@ -1,46 +1,43 @@
 package main
 
-import (
-	"fmt"
-)
+func reducer(message []byte) (result *[]byte) {
+	msg := readMsg(message)
+	switch msg.Action {
 
-func reducer(msg []byte) (result []byte) {
-	message := readMessage(msg)
-	switch message.Type {
 	case "CONNECT":
-		GameField.Init()
-		result, _ = createMessage("INITIALIZE", Game.Snake)
+		data, _ := createMsg("INITIALIZE", nil)
+		result = &data
 
 	// Game config
 	case "SET_GAME_SETTINGS":
-		settings := getGameSettings(message.Data)
-		GameField.SetSize(settings["width"], settings["height"])
-		result, _ = createMessage("SET_GAME_SETTINGS", nil)
+		// error
+		data := readSettingsFromMsg(msg.Data)
+
+		game.FieldSize = data["fieldSize"]
+		game.BlockSize = data["blockSize"]
+		game.Speed = data["speed"]
+		result = nil
+
 	case "START_PAUSE":
-		isStarted := message.Data.(bool)
-		Game.StartStop(isStarted)
-		result, _ = createMessage("START_PAUSE", isStarted)
+		data, _ := createMsg("START_PAUSE", nil)
+		result = &data
 
 	// Game controls
 	case "UP":
-		fmt.Println("UP")
-		Game.Direction = message.Type
-		result, _ = createMessage("UP", "UP")
+		game.Direction = "UP"
+		result = nil
 
 	case "DOWN":
-		fmt.Print("DOWN")
-		Game.Direction = message.Type
-		result, _ = createMessage("DOWN", "DOWN")
+		game.Direction = "DOWN"
+		result = nil
+
 	case "RIGHT":
-		fmt.Print("RIGHT")
-		Game.Direction = message.Type
-		result, _ = createMessage("RIGHT", "RIGHT")
+		game.Direction = "RIGHT"
+		result = nil
 
 	case "LEFT":
-		fmt.Print("LEFT")
-		Game.Direction = message.Type
-		result, _ = createMessage("LEFT", "LEFT")
-
+		game.Direction = "LEFT"
+		result = nil
 	}
 	return
 }

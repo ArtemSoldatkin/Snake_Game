@@ -2,7 +2,7 @@ import { Reducer } from "./reducer.js";
 
 const socket = new WebSocket("ws://localhost:5000/echo");
 
-export const SendMsg = (type, data = null) => socket.send(JSON.stringify({ type, data }));
+export const SendMsg = (action, data = null) => socket.send(JSON.stringify({ action, data }));
 
 socket.onopen = () => {
 	console.info("Connected to server");
@@ -11,7 +11,7 @@ socket.onopen = () => {
 
 socket.onmessage = (e) => {
 	const msgData = JSON.parse(e.data);
-	const { type: action, data } = msgData;
+	const { action, data } = msgData;
 	Reducer(action, data);
 };
 

@@ -37,7 +37,7 @@
 	line-height: 48px;
 }
 
-#start_pause_game {
+#game_button {
 	background-color: var(--accent-color);
 	color: white;
 	height: 50px;
@@ -46,7 +46,7 @@
 	font-weight: bold;
 }
 
-#start_pause_game:hover {
+#game_button:hover {
 	color: var(--primary-color);
 }
 
@@ -66,4 +66,8 @@
 	line-height: 18px;
 	color: white;
 	background-color: var(--primary-color);
+}
+
+#send_config:hover {
+	color: var(--accent-color);
 }

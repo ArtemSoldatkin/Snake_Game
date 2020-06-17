@@ -1,51 +1,32 @@
-// websockets.go
 package main
 
 import (
 	"net/http"
-	"snake/field"
-	"snake/game"
 
 	"github.com/gorilla/websocket"
 )
-
-// GameConfig - default game config
-var GameConfig = readConfig()
-
-// GameField - struct with game field params
-var GameField = field.Field{FieldWidth: GameConfig.Width, FieldHeight: GameConfig.Height}
-
-// Game - type of game with settings
-var Game = game.Game{Field: &GameField, Speed: GameConfig.Speed}
 
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
 	WriteBufferSize: 1024,
 }
 
+var game Game
+
 func main() {
-
-	Game.Init()
-
 	http.HandleFunc("/echo", func(w http.ResponseWriter, r *http.Request) {
 		conn, _ := upgrader.Upgrade(w, r, nil)
-		moveAction := func(snake interface{}, args ...string) {
-			msgType := "MOVE"
-			if len(args) > 0 {
-				msgType = args[0]
-			}
-			msg, _ := createMessage(msgType, snake)
-			if err := conn.WriteMessage(1, msg); err != nil {
-				return
-			}
-		}
-		Game.Message = moveAction
+
 		for {
 			msgType, msg, err := conn.ReadMessage()
 			if err != nil {
 				return
 			}
-			msg = reducer(msg)
+			message := reducer(msg)
+			if message == nil {
+				return
+			}
+			msg = *message
 			if err = conn.WriteMessage(msgType, msg); err != nil {
 				return
 			}
