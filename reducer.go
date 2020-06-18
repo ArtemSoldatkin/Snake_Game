@@ -5,7 +5,8 @@ func reducer(message []byte) (result *[]byte) {
 	switch msg.Action {
 
 	case "CONNECT":
-		data, _ := createMsg("INITIALIZE", nil)
+		game.Init()
+		data, _ := createMsg("INITIALIZE", game.Snake)
 		result = &data
 
 	// Game config
@@ -19,24 +20,14 @@ func reducer(message []byte) (result *[]byte) {
 		result = nil
 
 	case "START_PAUSE":
+		isStarted := msg.Data.(bool)
+		game.StartStop(isStarted)
 		data, _ := createMsg("START_PAUSE", nil)
 		result = &data
 
-	// Game controls
-	case "UP":
-		game.Direction = "UP"
-		result = nil
-
-	case "DOWN":
-		game.Direction = "DOWN"
-		result = nil
-
-	case "RIGHT":
-		game.Direction = "RIGHT"
-		result = nil
-
-	case "LEFT":
-		game.Direction = "LEFT"
+	// Game controls (check currect direction - can't set opposite direction)
+	case "UP", "DOWN", "RIGHT", "LEFT":
+		game.SetDirection(msg.Action)
 		result = nil
 	}
 	return

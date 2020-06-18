@@ -1,6 +1,6 @@
 import { Game } from "./game.js";
 
-const game = new Game();
+export const game = new Game();
 game.Start();
 
 // gameover -> initialize

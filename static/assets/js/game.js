@@ -6,8 +6,11 @@ export class Game extends Config {
 		super();
 		this.ctx = this.field.getContext("2d");
 		this.addControl();
+		this.gameBtn.addEventListener("click", this.startStop);
+		this.isStarted = false;
 	}
 
+	// add start to Enter
 	addControl = () => {
 		document.onkeyup = (e) => {
 			let direction;
@@ -25,19 +28,34 @@ export class Game extends Config {
 					direction = "LEFT";
 					break;
 			}
-			direction && SendMsg(direction);
+			if (!!direction && this.isStarted) SendMsg(direction);
 		};
 	};
 
-	drawSnake = (snake) => {
-		this.ctx.clearRect(0, 0, this.field.width, this.field.height);
+	startStop = () => {
+		this.isStarted = !this.isStarted;
+		this.disableElements(".settings_controls", this.isStarted);
+		this.gameBtn.innerText = this.isStarted ? "Pause" : "Start";
+		SendMsg("START_PAUSE", this.isStarted);
+	};
+
+	DrawSnake = (snake) => {
+		const fs = this.blockSize.value * this.fieldSize.value;
+		this.ctx.clearRect(0, 0, fs, fs);
 		this.ctx.fillStyle = "white";
 		snake.map((block) => {
-			this.ctx.fillRect(block.x, block.y, block.width, block.height);
+			this.ctx.fillRect(block.x, block.y, this.blockSize.value, this.blockSize.value);
 		});
 	};
 
 	Start = () => {
 		this.uploadConfig();
+	};
+
+	GameOver = () => {
+		this.isStarted = false;
+		this.gameBtn.innerText = "Start";
+		alert("GAME_OVER");
+		SendMsg("CONNECT");
 	};
 }

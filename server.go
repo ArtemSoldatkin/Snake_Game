@@ -11,12 +11,13 @@ var upgrader = websocket.Upgrader{
 	WriteBufferSize: 1024,
 }
 
-var game Game
+// read config ...
+var game = Game{FieldSize: 20, BlockSize: 20, Speed: 60}
 
 func main() {
 	http.HandleFunc("/echo", func(w http.ResponseWriter, r *http.Request) {
 		conn, _ := upgrader.Upgrade(w, r, nil)
-
+		game.SetConn(conn)
 		for {
 			msgType, msg, err := conn.ReadMessage()
 			if err != nil {
@@ -24,7 +25,7 @@ func main() {
 			}
 			message := reducer(msg)
 			if message == nil {
-				return
+				continue
 			}
 			msg = *message
 			if err = conn.WriteMessage(msgType, msg); err != nil {

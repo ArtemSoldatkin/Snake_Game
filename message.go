@@ -1,6 +1,8 @@
 package main
 
-import "encoding/json"
+import (
+	"encoding/json"
+)
 
 // Msg - message type
 type Msg struct {

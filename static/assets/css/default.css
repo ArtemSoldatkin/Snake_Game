@@ -20,3 +20,8 @@ button:focus {
 	border: none;
 	outline: none;
 }
+
+button:disabled {
+	background-color: #bebebe !important;
+	color: #f8f8f8 !important;
+}

@@ -1,17 +1,14 @@
-/*import { DrawSnake } from "./game/index.js";
-import { GameOver } from "./config.js";*/
+import { game } from "./index.js";
 
 export const Reducer = (action, data) => {
 	console.log(action, data);
 	switch (action) {
 		case "INITIALIZE":
-			//DrawSnake(data);
-			break;
 		case "MOVE":
-			//DrawSnake(data);
+			game.DrawSnake(data);
 			break;
 		case "GAME_OVER":
-			//GameOver();
+			game.GameOver();
 			break;
 	}
 };

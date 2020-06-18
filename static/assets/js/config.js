@@ -33,7 +33,7 @@ export class Config {
 
 	disableElements = (selector, value) => {
 		const elements = document.querySelectorAll(selector);
-		for (let i = 0; i < elements.length; ++i) elements.disable = value;
+		for (let i = 0; i < elements.length; ++i) elements[i].disabled = value;
 	};
 
 	setSettings = () => {
