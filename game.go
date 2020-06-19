@@ -12,6 +12,11 @@ type block struct {
 	Y int `json:"y"`
 }
 
+type snakeFood struct {
+	Snake []block `json:"snake"`
+	Food  []block `json:"food"`
+}
+
 // Game - snake game
 type Game struct {
 	FieldSize, BlockSize, Speed int
@@ -21,13 +26,14 @@ type Game struct {
 	ticker                      *time.Ticker
 	Snake                       []block
 	conn                        *websocket.Conn
+	Food                        []block
 }
 
 // Init - initialize game
 func (g *Game) Init() {
 	g.Direction = "RIGHT"
 	g.IsStarted = false
-	g.ticker = time.NewTicker(500 * time.Millisecond)
+	g.ticker = time.NewTicker(200 * time.Millisecond)
 	g.done = make(chan bool)
 	g.initSnake()
 }
@@ -42,10 +48,31 @@ func (g *Game) SetDirection(direction string) {
 	g.Direction = direction
 }
 
+func (g *Game) initFood() {
+	randInt := rand.Intn(g.FieldSize) * g.BlockSize
+	food := block{randInt, randInt}
+	g.Food = append(g.Food, food)
+}
+
 func (g *Game) initSnake() {
 	randInt := rand.Intn(int(g.FieldSize/2)) * g.BlockSize
 	head := block{randInt, randInt}
 	g.Snake = []block{head}
+}
+
+func (g *Game) isEatFood(head block) bool {
+	for i, f := range g.Food {
+		if f.X == head.X && f.Y == head.Y {
+			if len(g.Food) > 1 {
+				g.Food[i] = g.Food[len(g.Food)-1]
+				g.Food = g.Food[:len(g.Food)-1]
+			} else {
+				g.Food = []block{}
+			}
+			return true
+		}
+	}
+	return false
 }
 
 func (g *Game) move() {
@@ -60,18 +87,33 @@ func (g *Game) move() {
 	case "RIGHT":
 		head.X += g.BlockSize
 	}
-	g.Snake = g.Snake[:len(g.Snake)-1]
-	g.Snake = append(g.Snake, head)
+	if !g.isEatFood(head) {
+		g.Snake = g.Snake[:len(g.Snake)-1]
+	}
+	g.Snake = append([]block{head}, g.Snake...)
+}
+
+func (g Game) isSelfBite() bool {
+	if len(g.Snake) == 1 {
+		return false
+	}
+	head := g.Snake[0]
+	for _, p := range g.Snake[1:] {
+		if p.X == head.X && p.Y == head.Y {
+			return true
+		}
+	}
+	return false
 }
 
 func (g Game) checkBoundaries() bool {
 	head := g.Snake[0]
 	max := g.FieldSize * g.BlockSize
-	return head.X < 0 || head.X > max-g.BlockSize || head.Y > max-g.BlockSize || head.Y < 0
+	return head.X < 0 || head.X > max-g.BlockSize || head.Y > max-g.BlockSize || head.Y < 0 || g.isSelfBite()
 }
 
 func (g *Game) start() {
-	g.ticker = time.NewTicker(500 * time.Millisecond)
+	g.ticker = time.NewTicker(200 * time.Millisecond)
 	g.done = make(chan bool)
 	go func() {
 		for {
@@ -86,7 +128,10 @@ func (g *Game) start() {
 					msg, _ = createMsg("GAME_OVER", nil)
 					g.IsStarted = false
 				} else {
-					msg, _ = createMsg("MOVE", g.Snake)
+					if len(g.Food) == 0 {
+						g.initFood()
+					}
+					msg, _ = createMsg("MOVE", snakeFood{g.Snake, g.Food})
 				}
 				if err := g.conn.WriteMessage(1, msg); err != nil {
 					return

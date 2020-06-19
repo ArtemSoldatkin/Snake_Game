@@ -10,22 +10,29 @@ export class Game extends Config {
 		this.isStarted = false;
 	}
 
-	// add start to Enter
 	addControl = () => {
 		document.onkeyup = (e) => {
 			let direction;
 			switch (e.key) {
+				case "w":
 				case "ArrowUp":
 					direction = "UP";
 					break;
+				case "s":
 				case "ArrowDown":
 					direction = "DOWN";
 					break;
+				case "d":
 				case "ArrowRight":
 					direction = "RIGHT";
 					break;
+				case "a":
 				case "ArrowLeft":
 					direction = "LEFT";
+					break;
+				case " ":
+				case "Enter":
+					this.gameBtn.click();
 					break;
 			}
 			if (!!direction && this.isStarted) SendMsg(direction);
@@ -39,13 +46,17 @@ export class Game extends Config {
 		SendMsg("START_PAUSE", this.isStarted);
 	};
 
-	DrawSnake = (snake) => {
+	DrawSnake = (snake, food) => {
 		const fs = this.blockSize.value * this.fieldSize.value;
 		this.ctx.clearRect(0, 0, fs, fs);
 		this.ctx.fillStyle = "white";
 		snake.map((block) => {
-			this.ctx.fillRect(block.x, block.y, this.blockSize.value, this.blockSize.value);
+			this.ctx.fillRect(block.x, block.y, this.blockSize.value - 1, this.blockSize.value - 1);
 		});
+		food?.map((block) => {
+			this.ctx.fillRect(block.x, block.y, this.blockSize.value - 1, this.blockSize.value - 1);
+		});
+		snake.length > 1 && snake.length != this.result.innerText && (this.result.innerText = snake.length - 1);
 	};
 
 	Start = () => {
@@ -55,7 +66,9 @@ export class Game extends Config {
 	GameOver = () => {
 		this.isStarted = false;
 		this.gameBtn.innerText = "Start";
-		alert("GAME_OVER");
+		this.gameOverResult.innerText = this.result.innerText;
+		this.gameOverModal.showModal();
+		//alert("GAME_OVER");
 		SendMsg("CONNECT");
 	};
 }

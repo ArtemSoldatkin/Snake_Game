@@ -6,7 +6,7 @@ func reducer(message []byte) (result *[]byte) {
 
 	case "CONNECT":
 		game.Init()
-		data, _ := createMsg("INITIALIZE", game.Snake)
+		data, _ := createMsg("INITIALIZE", snakeFood{Snake: game.Snake})
 		result = &data
 
 	// Game config
@@ -25,9 +25,11 @@ func reducer(message []byte) (result *[]byte) {
 		data, _ := createMsg("START_PAUSE", nil)
 		result = &data
 
-	// Game controls (check currect direction - can't set opposite direction)
+	// Game controls
 	case "UP", "DOWN", "RIGHT", "LEFT":
-		game.SetDirection(msg.Action)
+		if !isOpposite(game.Direction, msg.Action) {
+			game.SetDirection(msg.Action)
+		}
 		result = nil
 	}
 	return

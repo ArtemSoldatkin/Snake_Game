@@ -3,6 +3,8 @@ import { SendMsg } from "./websocket.js";
 export class Config {
 	// game field
 	field = document.getElementById("game_field");
+	// result
+	result = document.getElementById("results_value");
 	// settings inputs
 	blockSize = document.getElementById("block_size");
 	fieldSize = document.getElementById("field_size");
@@ -11,6 +13,9 @@ export class Config {
 	settingSBtn = document.getElementById("send_config");
 	// game button
 	gameBtn = document.getElementById("game_button");
+	// game over modal
+	gameOverModal = document.getElementById("game_over");
+	gameOverResult = document.getElementById("game_over_result");
 
 	constructor() {
 		this.disableElements("input", true);

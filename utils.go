@@ -12,3 +12,19 @@ func readSettingsFromMsg(data interface{}) Settings {
 	}
 	return result
 }
+
+// isOpposite - check current direction is opposite to next direction or not
+func isOpposite(current, next string) bool {
+	switch current {
+	case "UP":
+		return next == "DOWN"
+	case "DOWN":
+		return next == "UP"
+	case "RIGHT":
+		return next == "LEFT"
+	case "LEFT":
+		return next == "RIGHT"
+	default:
+		return true
+	}
+}
