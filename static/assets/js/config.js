@@ -1,6 +1,7 @@
 import { SendMsg } from "./websocket.js";
 
 export class Config {
+	body = document.getElementsByTagName("body")[0];
 	// game field
 	field = document.getElementById("game_field");
 	// result
@@ -16,13 +17,24 @@ export class Config {
 	// game over modal
 	gameOverModal = document.getElementById("game_over");
 	gameOverResult = document.getElementById("game_over_result");
+	gameOverCloseBtn = document.getElementById("close_button");
 
 	constructor() {
 		this.disableElements("input", true);
 		this.disableElements("button", true);
 		this.settingSBtn.addEventListener("click", this.setSettings);
 		this.addInputValidate();
+		this.gameOverCloseBtn.addEventListener("click", this.closeModal);
+		this.body.addEventListener("click", this.clickOutsideModal);
 	}
+
+	clickOutsideModal = (e) => {
+		e.target === this.gameOverModal && this.closeModal();
+	};
+
+	closeModal = () => {
+		this.gameOverModal.close();
+	};
 
 	addInputValidate = () => {
 		const inputs = document.getElementsByTagName("input");
@@ -31,8 +43,8 @@ export class Config {
 
 	validateInputs = (e) => {
 		let { value, min, max } = e.target;
-		value > max && (value = max);
-		value < min && (value = min);
+		+value > +max && (value = max);
+		+value < +min && (value = min);
 		e.target.value = value;
 	};
 
@@ -45,7 +57,11 @@ export class Config {
 		const fieldSize = this.blockSize.value * this.fieldSize.value;
 		this.field.width = fieldSize;
 		this.field.height = fieldSize;
-		SendMsg("SET_GAME_SETTINGS", { fieldSize, blockSize: this.blockSize.value, gameSpeed: this.gameSpeed.value });
+		SendMsg("SET_GAME_SETTINGS", {
+			field_size: parseInt(this.fieldSize.value),
+			block_side: parseInt(this.blockSize.value),
+			speed: parseInt(this.gameSpeed.value),
+		});
 	};
 
 	uploadConfig = async () => {
@@ -58,6 +74,7 @@ export class Config {
 		this.blockSize.value = bs;
 		this.fieldSize.value = fs;
 		this.gameSpeed.value = CONFIG["speed"];
+		this.gameSpeed.max = CONFIG["max_speed"];
 		this.disableElements("input", false);
 		this.disableElements("button", false);
 	};

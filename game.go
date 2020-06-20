@@ -19,22 +19,22 @@ type snakeFood struct {
 
 // Game - snake game
 type Game struct {
-	FieldSize, BlockSize, Speed int
-	Direction                   string
-	IsStarted                   bool
-	done                        chan bool
-	ticker                      *time.Ticker
-	Snake                       []block
-	conn                        *websocket.Conn
-	Food                        []block
+	FieldSize, BlockSize, Speed, MaxSpeed int
+	Direction                             string
+	IsStarted                             bool
+	done                                  chan bool
+	ticker                                *time.Ticker
+	Snake                                 []block
+	conn                                  *websocket.Conn
+	Food                                  []block
 }
 
 // Init - initialize game
 func (g *Game) Init() {
 	g.Direction = "RIGHT"
 	g.IsStarted = false
-	g.ticker = time.NewTicker(200 * time.Millisecond)
-	g.done = make(chan bool)
+	//g.ticker = time.NewTicker(200 * time.Millisecond)
+	//g.done = make(chan bool)
 	g.initSnake()
 }
 
@@ -48,14 +48,21 @@ func (g *Game) SetDirection(direction string) {
 	g.Direction = direction
 }
 
+// SetGameParams - set base game parameters
+func (g *Game) SetGameParams(fieldSize, blockSize, speed int) {
+	g.FieldSize = fieldSize
+	g.BlockSize = blockSize
+	g.Speed = speed
+}
+
 func (g *Game) initFood() {
-	randInt := rand.Intn(g.FieldSize) * g.BlockSize
+	randInt := rand.Intn(g.FieldSize-2)*g.BlockSize + g.BlockSize
 	food := block{randInt, randInt}
 	g.Food = append(g.Food, food)
 }
 
 func (g *Game) initSnake() {
-	randInt := rand.Intn(int(g.FieldSize/2)) * g.BlockSize
+	randInt := rand.Intn(int(g.FieldSize/2))*g.BlockSize + g.BlockSize
 	head := block{randInt, randInt}
 	g.Snake = []block{head}
 }
@@ -113,7 +120,7 @@ func (g Game) checkBoundaries() bool {
 }
 
 func (g *Game) start() {
-	g.ticker = time.NewTicker(200 * time.Millisecond)
+	g.ticker = time.NewTicker(time.Duration(((g.MaxSpeed + 1 - g.Speed) * 100)) * time.Millisecond)
 	g.done = make(chan bool)
 	go func() {
 		for {
@@ -121,6 +128,9 @@ func (g *Game) start() {
 			case <-g.done:
 				return
 			case <-g.ticker.C:
+				if len(g.Food) == 0 {
+					g.initFood()
+				}
 				g.move()
 				isOver := g.checkBoundaries()
 				var msg []byte
@@ -128,9 +138,6 @@ func (g *Game) start() {
 					msg, _ = createMsg("GAME_OVER", nil)
 					g.IsStarted = false
 				} else {
-					if len(g.Food) == 0 {
-						g.initFood()
-					}
 					msg, _ = createMsg("MOVE", snakeFood{g.Snake, g.Food})
 				}
 				if err := g.conn.WriteMessage(1, msg); err != nil {

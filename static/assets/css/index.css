@@ -71,3 +71,33 @@
 #send_config:hover {
 	color: var(--accent-color);
 }
+
+#game_over {
+	border: none;
+	border-radius: var(--big-radius);
+	padding: 0;
+	box-shadow: 0 10px 5px -5px grey;
+}
+
+#close_button {
+	float: right;
+	width: auto;
+	font-weight: bold;
+	cursor: pointer;
+	user-select: none;
+	background: none;
+}
+
+#close_button:hover {
+	color: var(--accent-color);
+}
+
+.modal_content {
+	padding: 0 10px 10px 10px;
+	text-align: center;
+	user-select: none;
+}
+
+#game_over_result {
+	font-weight: bold;
+}

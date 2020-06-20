@@ -19,7 +19,7 @@
 				<h3>Settings</h3>
 				<div class="settings_inputs">
 					<label for="block_size">Block size</label>
-					<input id="block_size" class="settings_controls" type="number" min="1" max="10" />
+					<input id="block_size" class="settings_controls" type="number" min="1" max="20" />
 				</div>
 				<div class="settings_inputs">
 					<label for="field_size">Field size</label>
@@ -27,14 +27,17 @@
 				</div>
 				<div class="settings_inputs">
 					<label for="game_speed">Game speed</label>
-					<input id="game_speed" class="settings_controls" type="number" min="1" max="10" />
+					<input id="game_speed" class="settings_controls" type="number" min="1" />
 				</div>
 				<button id="send_config" class="settings_controls">Accept</button>
 			</div>
 		</div>
 	</div>
 	<dialog id="game_over">
-		<h1>Game Over</h1>
-		<div>Total score: <span id="game_over_result"></span></div>
+		<button id="close_button">x</button>
+		<div class="modal_content">
+			<h1>Game Over</h1>
+			<div>Total score: <span id="game_over_result"></span></div>
+		</div>
 	</dialog>
 </body>

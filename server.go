@@ -1,7 +1,9 @@
 package main
 
 import (
+	"math/rand"
 	"net/http"
+	"time"
 
 	"github.com/gorilla/websocket"
 )
@@ -11,10 +13,13 @@ var upgrader = websocket.Upgrader{
 	WriteBufferSize: 1024,
 }
 
-// read config ...
-var game = Game{FieldSize: 20, BlockSize: 20, Speed: 60}
+// CONFIG - game config from json
+var CONFIG = readConfig()
+
+var game = Game{FieldSize: CONFIG.FieldSize, BlockSize: CONFIG.BlockSize, Speed: CONFIG.Speed, MaxSpeed: CONFIG.MaxSpeed}
 
 func main() {
+	rand.Seed(time.Now().UTC().UnixNano())
 	http.HandleFunc("/echo", func(w http.ResponseWriter, r *http.Request) {
 		conn, _ := upgrader.Upgrade(w, r, nil)
 		game.SetConn(conn)

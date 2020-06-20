@@ -13,10 +13,7 @@ func reducer(message []byte) (result *[]byte) {
 	case "SET_GAME_SETTINGS":
 		// error
 		data := readSettingsFromMsg(msg.Data)
-
-		game.FieldSize = data["fieldSize"]
-		game.BlockSize = data["blockSize"]
-		game.Speed = data["speed"]
+		game.SetGameParams(data["field_size"], data["block_side"], data["speed"])
 		result = nil
 
 	case "START_PAUSE":

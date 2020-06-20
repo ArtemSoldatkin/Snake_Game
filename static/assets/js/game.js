@@ -65,10 +65,10 @@ export class Game extends Config {
 
 	GameOver = () => {
 		this.isStarted = false;
+		this.disableElements(".settings_controls", this.isStarted);
 		this.gameBtn.innerText = "Start";
 		this.gameOverResult.innerText = this.result.innerText;
 		this.gameOverModal.showModal();
-		//alert("GAME_OVER");
 		SendMsg("CONNECT");
 	};
 }

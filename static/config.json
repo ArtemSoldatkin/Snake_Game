@@ -1,5 +1,6 @@
 {
 	"block_side": 20,
 	"field_size": 20,
-	"speed": 60
+	"speed": 2,
+	"max_speed": 10
 }
